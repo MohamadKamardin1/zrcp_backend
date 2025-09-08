@@ -35,6 +35,11 @@ ALLOWED_HOSTS = [
         # Your domain
 ]
 
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'daouk2om6',
+    'API_KEY': '376374359352985',
+    'API_SECRET': config('CLOUDINARY_API_SECRET', default='-1i6RrULqGX9Eo6mVGiFWX42834'),
+}
 # Application definition
 
 INSTALLED_APPS = [
@@ -49,6 +54,9 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'drf_yasg',
+    'cloudinary',
+    'cloudinary_storage',
+    'whitenoise.runserver_nostatic',
     'storages',
     "content",
 ]
@@ -135,6 +143,9 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# Media files settings
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+MEDIA_URL = '/media/'  # This will be served by Cloudinary
 
 # For production, use S3 or similar for media files
 if config('USE_S3', default=False, cast=bool):
