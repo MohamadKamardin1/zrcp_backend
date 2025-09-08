@@ -31,7 +31,8 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     '.onrender.com',  # Allow all Render subdomains
-    '.zrcp.or.tz',    # Your domain
+    '.zrcp.or.tz',
+        # Your domain
 ]
 
 # Application definition
@@ -156,6 +157,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "https://zrcp.or.tz",
     "https://www.zrcp.or.tz",
+    "http://localhost:5173",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
