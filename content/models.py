@@ -2,12 +2,16 @@ import uuid
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
+from cloudinary.models import CloudinaryField  # Import CloudinaryField
 
 User = get_user_model()
+
 
 def upload_to(instance, filename):
     """
     Generate unique filenames for uploads based on model type.
+    Note: CloudinaryField does not use the upload_to parameter,
+    so this function will not affect Cloudinary uploads.
     """
     ext = filename.split('.')[-1].lower()
     unique_filename = f"{uuid.uuid4().hex}.{ext}"
@@ -34,11 +38,12 @@ class TimeStampedModel(models.Model):
 
 class ImageAsset(TimeStampedModel):
     """Reusable image (for blog inline images or research banners)."""
-    file = models.ImageField(upload_to=upload_to)
+    # Replace ImageField with CloudinaryField
+    file = CloudinaryField('image', blank=True, null=True)
     alt_text = models.CharField(max_length=255, blank=True, default="")
 
     def __str__(self):
-        return self.alt_text or self.file.name
+        return self.alt_text or (str(self.file) if self.file else "No image")
 
 
 class ContentBase(TimeStampedModel):
@@ -101,6 +106,7 @@ class Research(ContentBase):
     )
     description = models.TextField(blank=True)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default=DRAFT)
+    # For file field, keep FileField or use CloudinaryField if uploading all files to Cloudinary (images/audio/docs)
     file = models.FileField(upload_to=upload_to, blank=True, null=True)
 
     class Meta:
@@ -112,8 +118,8 @@ class Research(ContentBase):
 
 class ContentImage(TimeStampedModel):
     """Inline image used in content blocks."""
-    image = models.ImageField(upload_to=upload_to, blank=True, null=True)
+    image = CloudinaryField('image', blank=True, null=True)
     alt_text = models.CharField(max_length=255, blank=True, default="")
 
     def __str__(self):
-        return self.alt_text or (self.image.name if self.image else "No image")
+        return self.alt_text or (str(self.image) if self.image else "No image")

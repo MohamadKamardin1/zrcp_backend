@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import dj_database_url
 from decouple import config
 from pathlib import Path
+import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,6 +43,14 @@ CLOUDINARY_STORAGE = {
     'API_KEY': '376374359352985',
     'API_SECRET': config('CLOUDINARY_API_SECRET', default='-1i6RrULqGX9Eo6mVGiFWX42834'),
 }
+
+
+cloudinary.config(
+    cloud_name='daouk2om6',
+    api_key='376374359352985',
+    api_secret='-1i6RrULqGX9Eo6mVGiFWX42834'
+)
+
 # Application definition
 
 INSTALLED_APPS = [
