@@ -42,10 +42,9 @@ class ImageAsset(TimeStampedModel):
 
 
 class ContentBase(TimeStampedModel):
-    """Abstract base for content with featured image and slug."""
+    """Abstract base for content with title and slug."""
     title = models.CharField(max_length=220)
     slug = models.SlugField(max_length=250, unique=True, blank=True)
-    featured_image = models.ImageField(upload_to=upload_to, blank=True, null=True)
 
     class Meta:
         abstract = True
@@ -67,6 +66,13 @@ class Blog(ContentBase):
     PUBLISHED = "published"
     STATUS_CHOICES = [(DRAFT, "Draft"), (PUBLISHED, "Published")]
 
+    featured_image = models.ForeignKey(
+        ImageAsset,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="blog_featured_images"
+    )
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     summary = models.TextField(blank=True, help_text="Short excerpt for listings/SEO")
     body = models.JSONField(default=list, blank=True)
@@ -86,6 +92,13 @@ class Research(ContentBase):
     PUBLISHED = "published"
     STATUS_CHOICES = [(DRAFT, "Draft"), (IN_REVIEW, "In Review"), (PUBLISHED, "Published")]
 
+    featured_image = models.ForeignKey(
+        ImageAsset,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="research_featured_images"
+    )
     description = models.TextField(blank=True)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES, default=DRAFT)
     file = models.FileField(upload_to=upload_to, blank=True, null=True)
@@ -103,4 +116,4 @@ class ContentImage(TimeStampedModel):
     alt_text = models.CharField(max_length=255, blank=True, default="")
 
     def __str__(self):
-        return self.alt_text or self.image.name
+        return self.alt_text or (self.image.name if self.image else "No image")

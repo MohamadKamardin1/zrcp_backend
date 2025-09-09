@@ -8,6 +8,7 @@ class IsAdminOrReadOnly(permissions.BasePermission):
             return True
         return request.user and request.user.is_staff
 
+
 class ImageAssetViewSet(viewsets.ModelViewSet):
     queryset = ImageAsset.objects.all().order_by("-created_at")
     serializer_class = ImageAssetSerializer
@@ -15,7 +16,8 @@ class ImageAssetViewSet(viewsets.ModelViewSet):
 
 
 class BlogViewSet(viewsets.ModelViewSet):
-    queryset = Blog.objects.select_related("author", "featured_image").all()
+    # ✅ Removed 'featured_image' from select_related (it's now an ImageField)
+    queryset = Blog.objects.select_related("author").all()
     serializer_class = BlogSerializer
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -32,7 +34,8 @@ class BlogViewSet(viewsets.ModelViewSet):
 
 
 class ResearchViewSet(viewsets.ModelViewSet):
-    queryset = Research.objects.select_related("featured_image").all()
+    # ✅ Removed 'featured_image' from select_related (it's now an ImageField)
+    queryset = Research.objects.all()
     serializer_class = ResearchSerializer
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]

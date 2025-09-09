@@ -51,7 +51,7 @@ class ResearchSerializer(serializers.ModelSerializer):
         fields = [
             "id", "title", "slug",
             "featured_image", "featured_image_id",
-            "description", "status", "pdf",
+            "description", "status", "file",
             "created_at", "updated_at",
         ]
         read_only_fields = ["slug", "created_at", "updated_at"]
