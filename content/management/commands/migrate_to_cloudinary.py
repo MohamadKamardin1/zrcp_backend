@@ -39,7 +39,12 @@ class Command(BaseCommand):
                         public_id=f"{model.__name__.lower()}/{image_asset.file.name}",
                         resource_type="image"
                     )
-                    image_asset.file = result['secure_url']
+                    # image_asset.file = result['secure_url']
+                    from django.core.files.base import ContentFile
+                    import requests
+
+                    response = requests.get(result['secure_url'])
+                    image_asset.file.save(image_asset.file.name, ContentFile(response.content), save=True)
                     image_asset.save()
 
                     self.stdout.write(f'  ✅ Migrated: {image_asset.file.name} -> {result["secure_url"]}')
